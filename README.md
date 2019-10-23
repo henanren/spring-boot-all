@@ -1,3 +1,6 @@
+
+很多代码，包括sharding-jdbc
+
 # spring-boot
 依赖1.5.19版本，http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/
 
