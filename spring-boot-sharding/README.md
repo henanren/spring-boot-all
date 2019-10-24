@@ -175,7 +175,7 @@ sharding.jdbc.datasource.ds_0.connectionTestQuery=select 1
 
 sharding.jdbc.config.sharding.tables.t_order.key-generator-column-name=order_id
 sharding.jdbc.config.sharding.tables.t_order.table-strategy.complex.sharding-columns=create_time,order_id
-sharding.jdbc.config.sharding.tables.t_order.table-strategy.complex.algorithm-class-name=com.lance.sharding.config.OrderComplexShardingStrategy
+sharding.jdbc.config.sharding.tables.t_order.table-strategy.complex.algorithm-class-name=com.myzh.sharding.config.OrderComplexShardingStrategy
 
 sharding.jdbc.config.sharding.binding-tables=t_order
 sharding.jdbc.config.sharding.default-data-source-name=ds_0
