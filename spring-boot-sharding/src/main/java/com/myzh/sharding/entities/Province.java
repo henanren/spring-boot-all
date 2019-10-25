@@ -1,12 +1,12 @@
-package com.myzh.sharding.model;
+package com.myzh.sharding.entities;
 
 import lombok.Data;
 
 
 /**
 * 
-* @author Lance
-* @since 2019-03-01 23:05:40
+* @author ruqing
+* @since 2019-10-24 23:05:40
 */
 @Data
 public class Province {

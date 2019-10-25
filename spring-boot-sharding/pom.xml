@@ -8,7 +8,7 @@
         <version>1.5.19.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.lance</groupId>
+    <groupId>com.ruqing</groupId>
     <artifactId>spring-boot-sharding</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>spring-boot-sharding</name>

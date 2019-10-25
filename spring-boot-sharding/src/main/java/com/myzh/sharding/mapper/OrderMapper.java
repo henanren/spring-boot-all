@@ -1,8 +1,8 @@
 package com.myzh.sharding.mapper;
 
-import com.myzh.sharding.model.Order;
-
 import java.util.List;
+
+import com.myzh.sharding.entities.Order;
 
 public interface OrderMapper {
     int save(Order info);

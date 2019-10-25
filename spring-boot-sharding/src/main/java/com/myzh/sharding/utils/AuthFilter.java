@@ -43,14 +43,16 @@ public class AuthFilter implements Filter {
 
 		HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
 		String tenant = httpServletRequest.getHeader("tenant");
-		log.info("tenant  ====  ");
+		log.info("tenant  ====  " + tenant);
 		if ("bj".equals(tenant)) {
 			TenantContextHolder.setTenant("ds_0");
 
 		} else if ("sh".equals(tenant)) {
 			TenantContextHolder.setTenant("ds_1");
-		} else {
+		} else if ("sz".equals(tenant)) {
 			TenantContextHolder.setTenant("ds_2");
+		} else {
+			TenantContextHolder.setTenant("ds_999999");
 		}
 
 		filterChain.doFilter(servletRequest, servletResponse);

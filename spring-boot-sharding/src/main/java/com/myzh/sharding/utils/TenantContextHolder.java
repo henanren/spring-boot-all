@@ -1,5 +1,7 @@
 package com.myzh.sharding.utils;
 
+import java.math.BigInteger;
+
 /**
  * 
  * @author xuruqing
@@ -16,7 +18,7 @@ public class TenantContextHolder {
 	public static final String getTenant() {
 		String scheme = tenantThreadLocal.get();
 		if (scheme == null) {
-			scheme = "";
+			scheme = null;
 		}
 		return scheme;
 	}
@@ -26,4 +28,9 @@ public class TenantContextHolder {
 		tenantThreadLocal.remove();
 	}
 
+	// 分片 是dn_999999
+	public static final BigInteger getProvinceId() {
+		return getTenant() == null ? new BigInteger("999999")
+				: new BigInteger(getTenant().substring(getTenant().indexOf("_") + 1));
+	}
 }

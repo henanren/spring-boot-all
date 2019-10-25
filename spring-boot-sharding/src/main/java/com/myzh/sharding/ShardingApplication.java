@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 /**
  * ShardingApplication
  * 
- * @author lance
+ * @author ruqing
  * @since 2019.3.1 22:57
  */
 @SpringBootApplication

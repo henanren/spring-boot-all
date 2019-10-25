@@ -3,9 +3,7 @@ package com.myzh.sharding;
 import java.math.BigInteger;
 import java.text.ParseException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,12 +20,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.myzh.sharding.entities.Company;
+import com.myzh.sharding.entities.Order;
+import com.myzh.sharding.entities.UserInfo;
 import com.myzh.sharding.mapper.CompanyMapper;
 import com.myzh.sharding.mapper.OrderMapper;
 import com.myzh.sharding.mapper.UserInfoMapper;
-import com.myzh.sharding.model.Company;
-import com.myzh.sharding.model.Order;
-import com.myzh.sharding.model.UserInfo;
 import com.myzh.sharding.service.UserInfoService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * ShardingTableTests
  * 
- * @author lance
+ * @author ruqing
  * @since 2019.3.1 23:17
  */
 @Slf4j
@@ -61,8 +59,8 @@ public class ShardingTableTests {
 	// @Test
 	@Ignore
 	public void save() {
-		BigInteger companyId = BigInteger.valueOf(2000);
-		userInfoMapper.save(createUser(companyId, 0));
+		BigInteger provinceId = BigInteger.valueOf(2000);
+		userInfoMapper.save(createUser(provinceId, 0));
 	}
 
 	// @Test
@@ -89,19 +87,18 @@ public class ShardingTableTests {
 	@Test
 	// @Ignore
 	public void list() {
-		BigInteger companyId = BigInteger.valueOf(3000);
-		// Map<String, Object>map = Maps.newHashMap("companyId", companyId);
-		Map<String, Object> map = new HashMap<>();
-		int i = userInfoMapper.findCount(map);
-		System.out.println("list ===========  " + i);
+		// BigInteger provinceId = BigInteger.valueOf(3000);
+		// Map<String, Object>map = Maps.newHashMap("provinceId", provinceId);
+
+		int i = userInfoService.findCount();
+		System.out.println("test  cnt   ===========  " + i);
 	}
 
-	@Test
+	// @Test
 	// @Ignore
 	public void batchSave() {
 		try {
 			userInfoService.batchInsertAndfind();
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -118,8 +115,8 @@ public class ShardingTableTests {
 		companyMapper.save(company);
 	}
 
-	private UserInfo createUser(BigInteger companyId, int index) {
-		return UserInfo.builder().account("Account." + index).companyId(companyId)
+	private UserInfo createUser(BigInteger provinceId, int index) {
+		return UserInfo.builder().account("Account." + index).provinceId(provinceId)
 				.password(RandomStringUtils.randomAlphabetic(8)).userName("Name." + index).build();
 	}
 }

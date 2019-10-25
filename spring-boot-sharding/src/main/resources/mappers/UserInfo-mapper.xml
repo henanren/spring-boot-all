@@ -5,17 +5,17 @@
 
 	<!-- Save对象 -->
 	<insert id="save" useGeneratedKeys="true" keyProperty="userId" parameterType="UserInfo">
-		insert into t_user_info(company_id,user_name,account,password)
+		insert into t_user_info(province_id,user_name,account,password,uid)
 		values(
-		#{companyId},#{userName},#{account},#{password})
+		#{provinceId},#{userName},#{account},#{password},#{uId})
 	</insert>
 
 	<insert id="batchSave" parameterType="java.util.List">
-		insert into t_user_info(company_id,user_name,account,password)
+		insert into t_user_info(province_id,user_name,account,password,uid)
 		values
 		<foreach collection ="list" item="o" index= "index" separator =",">
 			(
-			#{o.companyId},#{o.userName},#{o.account},#{o.password}
+			#{o.provinceId},#{o.userName},#{o.account},#{o.password},#{o.uId}
 			)
 		</foreach >
 	</insert>
@@ -23,33 +23,32 @@
 	<!-- Update对象 -->
 	<update id="update" parameterType="UserInfo">
 		update t_user_info set
-		company_id = #{companyId},
-		user_name = #{userName},
-		account = #{account},
-		password = #{password} where user_id=#{userId}
+		
+		user_name = #{userName} 
+	    where uid=#{uId} and province_id = #{provinceId} 
 	</update>
 
 	<!-- 根据ID删除对象 -->
-	<delete id="delete">
-		delete from t_user_info where user_id=#{value}
+	<delete id="delete" parameterType="UserInfo"> 
+		delete from t_user_info where uid=#{uId} AND 	province_id = #{provinceId}
 	</delete>
 
 	<!-- 根据ID查询对象 -->
-	<select id="findById" resultType="UserInfo">
+	<select id="findById" resultType="UserInfo" parameterType="UserInfo">
 		select 
-		user_id,company_id,user_name,account,password
+		user_id,province_id,user_name,account,password,uid 
 		from t_user_info
-		where user_id=#{value}
+		where user_id=#{userId}  AND 	province_id = #{provinceId}
 	</select>
 
 	<!-- 根据ID查询对象 -->
 	<select id="findAll" resultType="UserInfo" parameterType="map">
 		select 
-		user_id,company_id,user_name,account,password
+		user_id,province_id,user_name,account,password,uid 
 		from t_user_info
 		<where>
-			<if test="companyId!=null">
-				and company_id=#{companyId}
+			<if test="provinceId!=null">
+				and province_id=#{provinceId}
 			</if>
 		</where>
 	</select>
@@ -57,5 +56,10 @@
 	<!-- 根据ID查询对象 -->
 	<select id="findCount" resultType="int" parameterType="map">
 		select count(1) from t_user_info
+		<where>
+			<if test="provinceId!=null">
+				and province_id=#{provinceId}
+			</if>
+		</where>
 	</select>
 </mapper>
