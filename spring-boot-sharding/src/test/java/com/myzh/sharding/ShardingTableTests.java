@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -20,14 +21,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.google.common.collect.Maps;
 import com.myzh.sharding.entities.Company;
 import com.myzh.sharding.entities.Order;
 import com.myzh.sharding.entities.UserInfo;
-import com.myzh.sharding.mapper.CompanyMapper;
 import com.myzh.sharding.mapper.OrderMapper;
-import com.myzh.sharding.mapper.UserInfoMapper;
+import com.myzh.sharding.service.CompanyService;
 import com.myzh.sharding.service.UserInfoService;
 
+import io.shardingsphere.api.HintManager;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -41,10 +43,9 @@ import lombok.extern.slf4j.Slf4j;
 @RunWith(SpringRunner.class)
 public class ShardingTableTests {
 	private ExecutorService service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
+
 	@Autowired
-	private UserInfoMapper userInfoMapper;
-	@Autowired
-	private CompanyMapper companyMapper;
+	private CompanyService companyService;
 	@Autowired
 	private OrderMapper orderMapper;
 	@Autowired
@@ -54,13 +55,6 @@ public class ShardingTableTests {
 	public void setUp() throws Exception {
 		// hintManager.setDatabaseShardingValue("ds_0");
 		// hintManager.addDatabaseShardingValue("t_user_info_0", 1);
-	}
-
-	// @Test
-	@Ignore
-	public void save() {
-		BigInteger provinceId = BigInteger.valueOf(2000);
-		userInfoMapper.save(createUser(provinceId, 0));
 	}
 
 	// @Test
@@ -84,13 +78,13 @@ public class ShardingTableTests {
 		CompletableFuture.allOf(futures.toArray(new CompletableFuture[] {})).join();
 	}
 
-	@Test
+	// @Test
 	// @Ignore
 	public void list() {
 		// BigInteger provinceId = BigInteger.valueOf(3000);
 		// Map<String, Object>map = Maps.newHashMap("provinceId", provinceId);
 
-		int i = userInfoService.findCount();
+		int i = userInfoService.findCountForHintTest();
 		System.out.println("test  cnt   ===========  " + i);
 	}
 
@@ -107,12 +101,57 @@ public class ShardingTableTests {
 	}
 
 	// @Test
-	@Ignore
+	// @Ignore
 	public void saveCompany() {
-		Company company = Company.builder().companyId(new BigInteger(RandomStringUtils.randomNumeric(4)))
-				.companyName("33").address("222").createTime(new Date()).build();
+		try {
+			Company company = Company.builder().companyId(new BigInteger(RandomStringUtils.randomNumeric(4)))
+					.companyName("000").address("000").createTime(new Date()).provinceId(new BigInteger("0")).build();
 
-		companyMapper.save(company);
+			companyService.save(company);
+
+			company = Company.builder().companyId(new BigInteger(RandomStringUtils.randomNumeric(4))).companyName("111")
+					.address("111").createTime(new Date()).provinceId(new BigInteger("1")).build();
+
+			companyService.save(company);
+
+			company = Company.builder().companyId(new BigInteger(RandomStringUtils.randomNumeric(4))).companyName("222")
+					.address("222").createTime(new Date()).provinceId(new BigInteger("2")).build();
+
+			companyService.save(company);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	// @Ignore
+	public void listCompany() {
+		HintManager hintManager = HintManager.getInstance();
+		hintManager.setMasterRouteOnly();
+
+		Map<String, Object> params = Maps.newHashMap();
+		params.put("provinceId", new BigInteger("0"));
+		List<Company> list = companyService.findAll(params);
+		log.info("listCompany  0 ===========  " + list);
+		hintManager.close();
+
+		hintManager = HintManager.getInstance();
+		hintManager.setMasterRouteOnly();
+		params = Maps.newHashMap();
+		params.put("provinceId", new BigInteger("1"));
+		list = companyService.findAll(params);
+		log.info("listCompany 1 =========== " + list);
+		hintManager.close();
+
+		hintManager = HintManager.getInstance();
+		hintManager.setMasterRouteOnly();
+		params = Maps.newHashMap();
+		params.put("provinceId", new BigInteger("2"));
+
+		list = companyService.findAll(params);
+		log.info("listCompany 2 =========== " + list);
+		hintManager.close();
+
 	}
 
 	private UserInfo createUser(BigInteger provinceId, int index) {

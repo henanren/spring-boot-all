@@ -88,6 +88,31 @@ public class UserInfoServiceImpl implements UserInfoService {
 	}
 
 	@Override
+	public int findCountForHintTest() {
+
+		// 用户登录的时候，根据用户地点，把地点对应的db，存入threadlocal中，然后在这里取出来
+		//
+		// HintManager.getInstance().setDatabaseShardingValue(TenantContextHolder.getTenant());
+		// hintManager.setDatabaseShardingValue("ds_0");// 分库不分表
+		// 分库，库内 又分表
+		// hintManager.addDatabaseShardingValue("t_user_info", "ds_0");
+		// 指定逻辑表到某分片
+		// for (int i = 0; i < 5; i++) {
+		// // hintManager.addDatabaseShardingValue("t_user_info", i);
+		// hintManager.addTableShardingValue("t_user_info", "t_user_info_" +
+		// i);
+		// }
+
+		Map<String, Object> params = new HashMap<>();
+
+		// params.put("companyId", 0);// 分片不成功的话，会全库扫描
+		params.put("provinceId", 0);// 按照分片查询
+
+		return userInfoMapper.findCount(params);
+
+	}
+
+	@Override
 	public int insert() {
 		UserInfo info = createUser(TenantContextHolder.getProvinceId(), 5);
 		return userInfoMapper.save(info);
@@ -120,8 +145,9 @@ public class UserInfoServiceImpl implements UserInfoService {
 		try {
 			Map<String, Object> params = new HashMap<>();
 			// hintManager.setMasterRouteOnly();
-			// params.put("companyId", 0);// 分片不成功的话，会全库扫描
-			params.put("provinceId", TenantContextHolder.getProvinceId());// 按照分片查询
+			// params.put("companyId", 0);// 分片不成功的话,不加分片字段 也会全库扫描，会全库扫描
+			params.put("provinceId", TenantContextHolder.getProvinceId());//
+			// 按照分片查询
 			hintManager.setMasterRouteOnly();
 			return userInfoMapper.findAll(params);
 		} finally {

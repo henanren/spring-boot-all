@@ -15,6 +15,8 @@ public interface UserInfoService {
 
 	int findCount();
 
+	int findCountForHintTest();
+
 	int insert();
 
 	int delete(BigInteger userId);

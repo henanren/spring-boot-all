@@ -5,9 +5,9 @@
 
 	<!-- Save对象 -->
 	<insert id="save" useGeneratedKeys="true" keyProperty="companyId" parameterType="Company">
-		insert into t_company(company_name,address,create_time)
+		insert into t_company(company_name,address,create_time,province_id)
 		values(
-		#{companyName},#{address},#{createTime})
+		#{companyName},#{address},#{createTime},#{provinceId})
 	</insert>
 
 	<!-- Update对象 -->
@@ -15,31 +15,33 @@
 		update t_company set 
 		company_name = #{companyName},
 		address = #{address},
-		create_time = #{createTime} where company_id=#{companyId}
+		create_time = #{createTime} where company_id=#{companyId} and province_id=#{provinceId}
 	</update>
 
 	<!-- 根据ID删除对象 -->
-	<delete id="delete">
-		delete from t_company where company_id=#{value}
+	<delete id="delete" parameterType="Company" >
+		delete from t_company where company_id=#{companyId} and province_id=#{provinceId}
 	</delete>
 
 	<!-- 根据ID查询对象 -->
-	<select id="findById" resultType="Company">
+	<select id="findById" resultType="Company" parameterType="map" >
 		select 
-		company_id,company_name,address,create_time
+		company_id,company_name,address,create_time,province_id
 		from t_company
-		where company_id=#{value}
+		where company_id=#{companyId} and province_id=#{provinceId}
 	</select>
 
 	<!-- 根据ID查询对象 -->
 	<select id="findAll" resultType="Company" parameterType="map">
 		select 
-		company_id,company_name,address,create_time
+		company_id,company_name,address,create_time,province_id
 		from t_company
+		where  province_id=#{provinceId}
 	</select>
 
 	<!-- 根据ID查询对象 -->
 	<select id="findCount" resultType="int" parameterType="map">
 		select count(1) from t_company
+		where  province_id=#{provinceId}
 	</select>
 </mapper>
